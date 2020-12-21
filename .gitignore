@@ -1,0 +1,14 @@
+# IntelliJ IDEA files and directories
+.idea
+build.properties
+
+# User specific files
+config.json
+src/com/daniml3/telexec/CustomCommands.java
+
+# Ignore the following extensions
+*.iml
+*.out
+
+# Build output directory
+out/
