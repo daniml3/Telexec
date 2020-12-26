@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.daniml3.telexec;
 
@@ -24,8 +24,9 @@ public class Commands {
     }
 
     public static void status(Telegram telegram, MessageListener listener, String chatId) {
-        telegram.sendMessage("Telexec is successfully running!\n\nJava version: {0}"
-                .replace("{0}",System.getProperty("java.version")), chatId);
+        telegram.sendMessage("Telexec is successfully running!\n\nJava version: {0}".replace(
+                                     "{0}", System.getProperty("java.version")),
+                chatId);
     }
 
     public static void stop(Telegram telegram, MessageListener listener, String chatId) {

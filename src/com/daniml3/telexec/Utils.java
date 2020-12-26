@@ -21,15 +21,12 @@ package com.daniml3.telexec;
 import java.io.*;
 
 public class Utils {
-    public static void print(String text) {
-        System.out.println(text);
-    }
+    public static void print(String text) { System.out.println(text); }
 
     public static void sleep(int mills) {
         try {
             Thread.sleep(mills);
         } catch (InterruptedException ignore) {
-
         }
     }
 
@@ -65,19 +62,11 @@ public class Utils {
         return readFile(new File(file), lastLine);
     }
 
-    public static String readFile(File file) {
-        return readFile(file, false);
-    }
+    public static String readFile(File file) { return readFile(file, false); }
 
-    public static String readFile(String file) {
-        return readFile(file,false);
-    }
+    public static String readFile(String file) { return readFile(file, false); }
 
-    public static String readLastLine(File file) {
-        return readFile(file, true);
-    }
+    public static String readLastLine(File file) { return readFile(file, true); }
 
-    public static String readLastLine(String file) {
-        return readFile(file, true);
-    }
+    public static String readLastLine(String file) { return readFile(file, true); }
 }

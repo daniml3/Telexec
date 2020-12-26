@@ -25,18 +25,19 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 public class MessageListener {
-
     // CTRL+C handling values
     final int MAX_STOP_ATTEMPTS = 5;
     int stopAttempts = 0;
 
     // Tasks and exceptions arrays
     ArrayList<String> runningTasks = new ArrayList<>();
-    ArrayList<String> exceptionArrayList= new ArrayList<>();
+    ArrayList<String> exceptionArrayList = new ArrayList<>();
 
     // The arguments all the commands contain
-    // In this case, only the Telegram argument which will be used for user interaction
-    private final Class<?>[] commandArguments = {Telegram.class, MessageListener.class, String.class};
+    // In this case, only the Telegram argument which will be used for user
+    // interaction
+    private final Class<?>[] commandArguments = {
+            Telegram.class, MessageListener.class, String.class};
 
     // Telegram class, to be initialized in startListening(Telegram telegram)
     Telegram telegram = null;
@@ -52,10 +53,12 @@ public class MessageListener {
         ArrayList<Class<?>> commandClasses = new ArrayList<>();
         commandClasses.add(com.daniml3.telexec.Commands.class);
 
-        // Detect if the CustomCommands class exists so we can execute commands from there
+        // Detect if the CustomCommands class exists so we can execute commands from
+        // there
         try {
             commandClasses.add(Class.forName("com.daniml3.telexec.CustomCommands"));
-        } catch (ClassNotFoundException ignore) {}
+        } catch (ClassNotFoundException ignore) {
+        }
 
         while (keepListening) {
             // Get latest updates from the Telegram API
@@ -64,10 +67,10 @@ public class MessageListener {
             if (telegram.newMessage && telegram.isCommand && !userInteractionBusy) {
                 for (Class<?> commandClass : commandClasses) {
                     try {
-                        commandClass
-                                .getMethod(telegram.lastCommand, commandArguments)
+                        commandClass.getMethod(telegram.lastCommand, commandArguments)
                                 .invoke(telegram.lastCommand, telegram, this, telegram.chatId);
-                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    } catch (NoSuchMethodException | IllegalAccessException
+                            | InvocationTargetException e) {
                         e.printStackTrace();
                     }
                 }
@@ -77,27 +80,26 @@ public class MessageListener {
             Utils.clearScreen();
 
             // Print the UI with the updated information
-            Utils.print("=======Telexec======" +
-                        "\nCopyright (C) 2020 daniml3 All Rights Reserved" +
-                        "\nThis program is licensed under the GNU GPLv3 license" +
-                        "\n====================" +
-                        "\n=====Debug info=====" +
-                        "\nRunning tasks: " + runningTasks.toString() +
-                        "\nUser interaction status: " + (userInteractionBusy ? "Busy" : "Free") +
-                        "\nAllowed users: " + telegram.getAllowedUsers() +
-                        "\nException list: " + exceptionArrayList.toString() +
-                        "\nLast API update: " + Instant.now() +
-                        "\n====================");
+            Utils.print("=======Telexec======"
+                    + "\nCopyright (C) 2020 daniml3 All Rights Reserved"
+                    + "\nThis program is licensed under the GNU GPLv3 license"
+                    + "\n===================="
+                    + "\n=====Debug info====="
+                    + "\nRunning tasks: " + runningTasks.toString()
+                    + "\nUser interaction status: " + (userInteractionBusy ? "Busy" : "Free")
+                    + "\nAllowed users: " + telegram.getAllowedUsers()
+                    + "\nException list: " + exceptionArrayList.toString()
+                    + "\nLast API update: " + Instant.now() + "\n====================");
         }
 
         while (!runningTasks.isEmpty()) {
             Utils.clearScreen();
-            Utils.print("====================" +
-                        "\nWaiting for all threads to stop" +
-                        "\nRunning tasks: " + runningTasks.toString() +
-                        "\nIf you want to forcefully stop the Bot, press CTRL+C {0} more time(s)"
-                                .replace("{0}", String.valueOf(MAX_STOP_ATTEMPTS - stopAttempts)) +
-                        "\n====================");
+            Utils.print("===================="
+                    + "\nWaiting for all threads to stop"
+                    + "\nRunning tasks: " + runningTasks.toString()
+                    + "\nIf you want to forcefully stop the Bot, press CTRL+C {0} more time(s)"
+                              .replace("{0}", String.valueOf(MAX_STOP_ATTEMPTS - stopAttempts))
+                    + "\n====================");
             Utils.sleep(10);
         }
 
@@ -125,7 +127,8 @@ public class MessageListener {
         telegram.newMessage = false;
         new Thread(() -> {
             try {
-                // Start the task on a separate thread and add it to the running task list
+                // Start the task on a separate thread and add it to the running task
+                // list
                 Thread thread = new Thread(runnable);
                 thread.start();
                 runningTasks.add(title);
@@ -135,20 +138,15 @@ public class MessageListener {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }).start();
+        })
+                .start();
     }
 
-    public void addRunningTask(String title) {
-        runningTasks.add(title);
-    }
+    public void addRunningTask(String title) { runningTasks.add(title); }
 
-    public void removeRunningTask(String title) {
-        runningTasks.remove(title);
-    }
+    public void removeRunningTask(String title) { runningTasks.remove(title); }
 
-    public void setUserInteractionBusy(boolean busy) {
-        userInteractionBusy = busy;
-    }
+    public void setUserInteractionBusy(boolean busy) { userInteractionBusy = busy; }
 
     // Add a new exception to the exceptions list for 20 seconds (for debugging)
     public void addException(Exception exception) {
@@ -160,6 +158,7 @@ public class MessageListener {
                 Utils.sleep(20000);
                 exceptionArrayList.remove(error.toString());
             }
-        }).start();
+        })
+                .start();
     }
 }

@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-
 public class Main {
     public static void main(String[] args) {
         MessageListener listener = new MessageListener();
@@ -43,7 +42,7 @@ public class Main {
         int i = 0;
         while (i < args.length) {
             if (args[i].equals("--config")) {
-                configFile = new File(args[i+1]);
+                configFile = new File(args[i + 1]);
                 i++;
             }
             i++;
@@ -84,8 +83,7 @@ public class Main {
             System.exit(1);
         }
 
-        Signal.handle(new Signal("INT"),
-                signal -> listener.stopListening(true));
+        Signal.handle(new Signal("INT"), signal -> listener.stopListening(true));
 
         listener.startListening(telegram);
     }
