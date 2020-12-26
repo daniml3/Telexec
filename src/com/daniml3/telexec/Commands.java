@@ -19,20 +19,18 @@
 package com.daniml3.telexec;
 
 public class Commands {
-    public static void start(Telegram telegram, MessageListener listener) {
-        status(telegram, listener);
+    public static void start(Telegram telegram, MessageListener listener, String chatId) {
+        status(telegram, listener, chatId);
     }
 
-    public static void status(Telegram telegram, MessageListener listener) {
-        listener.addRunningTask("Status");
+    public static void status(Telegram telegram, MessageListener listener, String chatId) {
         telegram.sendMessage("Telexec is successfully running!\n\nJava version: {0}"
-                .replace("{0}",System.getProperty("java.version")));
-        listener.removeRunningTask("Status");
+                .replace("{0}",System.getProperty("java.version")), chatId);
     }
 
-    public static void stop(Telegram telegram, MessageListener listener) {
+    public static void stop(Telegram telegram, MessageListener listener, String chatId) {
         Runnable runnable;
-        telegram.sendMessage("Do you want to stop the bot? (y/n)");
+        telegram.sendMessage("Do you want to stop the bot? (y/n)", chatId);
 
         runnable = () -> {
             boolean stop = false;
@@ -42,15 +40,15 @@ public class Commands {
                 if (telegram.newMessage && !telegram.isCommand) {
                     switch (telegram.lastMessageString.toLowerCase()) {
                         case "y", "yes" -> {
-                            telegram.sendMessage("The bot will stop when all the threads finishes");
+                            telegram.sendMessage("The bot will stop when all the threads finishes", chatId);
                             listener.stopListening();
                             stop = true;
                         }
                         case "n", "no" -> {
-                            telegram.sendMessage("Keeping the bot running");
+                            telegram.sendMessage("Keeping the bot running", chatId);
                             stop = true;
                         }
-                        default -> telegram.sendMessage("That is not a valid option");
+                        default -> telegram.sendMessage("That is not a valid option", chatId);
                     }
                 }
                 if (stop)

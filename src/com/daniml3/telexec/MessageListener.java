@@ -36,7 +36,7 @@ public class MessageListener {
 
     // The arguments all the commands contain
     // In this case, only the Telegram argument which will be used for user interaction
-    private final Class<?>[] commandArguments = {Telegram.class, MessageListener.class};
+    private final Class<?>[] commandArguments = {Telegram.class, MessageListener.class, String.class};
 
     // Telegram class, to be initialized in startListening(Telegram telegram)
     Telegram telegram = null;
@@ -62,17 +62,15 @@ public class MessageListener {
             telegram.getUpdates();
 
             if (telegram.newMessage && telegram.isCommand && !userInteractionBusy) {
-                new Thread (() -> {
-                    for (Class<?> commandClass : commandClasses) {
-                        try {
-                            commandClass
-                                    .getMethod(telegram.lastCommand, commandArguments)
-                                    .invoke(telegram.lastCommand, telegram, this);
-                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                            e.printStackTrace();
-                        }
+                for (Class<?> commandClass : commandClasses) {
+                    try {
+                        commandClass
+                                .getMethod(telegram.lastCommand, commandArguments)
+                                .invoke(telegram.lastCommand, telegram, this, telegram.chatId);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                        e.printStackTrace();
                     }
-                }).start();
+                }
             }
 
             // Clear the screen for printing the UI
@@ -104,7 +102,7 @@ public class MessageListener {
         }
 
         if (!silent)
-            telegram.sendMessage("Bot stopped");
+            telegram.sendMessage("Bot stopped", telegram.chatId);
         Utils.print("Telexec stopped successfully");
         System.exit(0);
     }
@@ -153,7 +151,7 @@ public class MessageListener {
     }
 
     // Add a new exception to the exceptions list for 20 seconds (for debugging)
-    public void addException (Exception exception) {
+    public void addException(Exception exception) {
         new Thread(() -> {
             StringWriter error = new StringWriter();
             exception.printStackTrace(new PrintWriter(error));

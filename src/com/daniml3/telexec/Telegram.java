@@ -73,8 +73,13 @@ public class Telegram {
         }
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String message, String chatId) {
         telegram("sendMessage", "?chat_id=" + chatId + "&text=" + URLEncoder.encode(message, StandardCharsets.UTF_8));
+    }
+
+    // Use the above method above, by specifying the chat id. This will be deprecated.
+    public void sendMessage(String message) {
+        sendMessage(message, this.chatId);
     }
 
     public void configureBotToken(String token) {

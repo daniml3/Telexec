@@ -43,12 +43,12 @@
 * ### Commands
     * The commands must follow this specific template for the correct behaviour of the bot:
       ```
-        // The command must always contain Telegram and MessageListener as arguments
-        public static void myCommandName(Telegram telegram, MessageListener listener) {
+        // The command must always contain Telegram, MessageListener and String chatId as arguments
+        public static void myCommandName(Telegram telegram, MessageListener listener, String chatId) {
         Runnable runnable;
       
         // Do something that doesn't need user interaction
-        telegram.sendMessage("Do you want to stop the bot? (y/n)");
+        telegram.sendMessage("Do you want to stop the bot? (y/n)", chatId);
 
         // The code that will be executed on a separate thread
         runnable = () -> {
@@ -64,13 +64,13 @@
                 if (telegram.newMessage && !telegram.isCommand) {
                     switch (telegram.lastMessageString.toLowerCase()) {
                         case "case1" -> {
-                            telegram.sendMessage("Case 1");
+                            telegram.sendMessage("Case 1", chatId);
                             stop = true;
                         }
                         case "case2" -> {
-                            telegram.sendMessage("Keeping the bot running");
+                            telegram.sendMessage("Keeping the bot running", chatId);
                         }
-                        default -> telegram.sendMessage("Default option");
+                        default -> telegram.sendMessage("Default option", chatId);
                     }
                 }
       

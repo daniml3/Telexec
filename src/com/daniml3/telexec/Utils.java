@@ -18,6 +18,8 @@
 
 package com.daniml3.telexec;
 
+import java.io.*;
+
 public class Utils {
     public static void print(String text) {
         System.out.println(text);
@@ -34,5 +36,48 @@ public class Utils {
     public static void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    public static String readFile(File file, boolean getLastLine) {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader;
+
+        try {
+            bufferedReader = new BufferedReader(new FileReader(file));
+            String lastLine = "";
+            String line = "";
+
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+                lastLine = line;
+            }
+
+            if (getLastLine)
+                return lastLine;
+
+            return stringBuilder.toString();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public static String readFile(String file, boolean lastLine) {
+        return readFile(new File(file), lastLine);
+    }
+
+    public static String readFile(File file) {
+        return readFile(file, false);
+    }
+
+    public static String readFile(String file) {
+        return readFile(file,false);
+    }
+
+    public static String readLastLine(File file) {
+        return readFile(file, true);
+    }
+
+    public static String readLastLine(String file) {
+        return readFile(file, true);
     }
 }
