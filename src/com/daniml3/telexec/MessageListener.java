@@ -93,6 +93,9 @@ public class MessageListener {
         }
 
         while (!runningTasks.isEmpty()) {
+            // Get latest updates from the Telegram API
+            telegram.getUpdates();
+
             Utils.clearScreen();
             Utils.print("===================="
                     + "\nWaiting for all threads to stop"
@@ -100,17 +103,29 @@ public class MessageListener {
                     + "\nIf you want to forcefully stop the Bot, press CTRL+C {0} more time(s)"
                               .replace("{0}", String.valueOf(MAX_STOP_ATTEMPTS - stopAttempts))
                     + "\n====================");
+
+            if (telegram.newMessage && !userInteractionBusy) {
+                if (telegram.lastMessageString.equalsIgnoreCase("stop")) {
+                    telegram.sendMessage("Stopping the bot forcefully");
+                    break;
+                }
+            }
             Utils.sleep(10);
         }
 
-        if (!silent)
-            telegram.sendMessage("Bot stopped", telegram.chatId);
+        telegram.sendMessage("Bot successfully stopped", telegram.chatId);
         Utils.print("Telexec stopped successfully");
         System.exit(0);
     }
 
     public void stopListening() {
         keepListening = false;
+
+        if (!silent) {
+            telegram.sendMessage(
+                    "Waiting for all threads to finish. If you want to forcefully stop, send the word 'stop'.");
+            silent = false;
+        }
         stopAttempts++;
         if (stopAttempts == MAX_STOP_ATTEMPTS) {
             Utils.print("Killing all processes and exiting");

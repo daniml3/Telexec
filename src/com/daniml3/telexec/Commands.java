@@ -41,7 +41,6 @@ public class Commands {
                 if (telegram.newMessage && !telegram.isCommand) {
                     switch (telegram.lastMessageString.toLowerCase()) {
                         case "y", "yes" -> {
-                            telegram.sendMessage("The bot will stop when all the threads finishes", chatId);
                             listener.stopListening();
                             stop = true;
                         }

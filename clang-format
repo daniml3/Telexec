@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ $(which clang-format) == "" ]]; then
+    echo "clang-format is not installed"
+    exit 1
+fi
+
+IFS=$'\n'
+
+for file in $(find src/com/daniml3/telexec -iname *.java); do
+    echo "Formatting $file"
+    echo $file | xargs clang-format -i
+done
+
+unset IFS
